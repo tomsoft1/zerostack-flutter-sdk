@@ -2,49 +2,49 @@ import 'package:zerostack/zerostack.dart';
 
 Future<void> main() async {
   final zs = ZeroStack(
-    apiUrl: 'https://zerostack.example.com/api',
-    wsUrl: 'https://zerostack.example.com',
-    apiKey: 'zs_your_api_key',
+    apiUrl: 'https://your-zerostack-server.com/api',
+    wsUrl: 'https://your-zerostack-server.com',
+    apiKey: 'zs_your_api_key_here',
   );
 
-  // Register or login
-  final result = await zs.auth.login('alice@example.com', 'password');
-  zs.setToken(result['accessToken'] as String);
+  // Option 1: Guest mode (no login required, node must be in publicNodes)
+  zs.setGuestId('guest_${DateTime.now().millisecondsSinceEpoch}');
 
-  // Create a message
-  final msg = await zs.data.create('messages', {
-    'text': 'Hello from Flutter!',
-    'room': 'general',
-  });
-  print('Created: ${msg['_id']}');
+  // Option 2: Authenticated user
+  // final result = await zs.auth.login('user@example.com', 'password');
+  // zs.setToken(result['accessToken'] as String);
 
-  // List messages
-  final items = await zs.data.list('messages', limit: 20, filter: {'room': 'general'});
-  print('Messages: $items');
+  try {
+    // Create a message
+    final msg = await zs.data.create('messages', {
+      'text': 'Hello from Dart SDK!',
+      'author': 'DartBot',
+    });
+    print('Created: ${msg['_id']}');
 
-  // Update
-  await zs.data.update('messages', msg['_id'] as String, {
-    'text': 'Edited from Flutter!',
-  });
+    // List messages
+    final result = await zs.data.list('messages', limit: 10);
+    final items = result is List ? result : (result['items'] as List);
+    print('Messages count: ${items.length}');
 
-  // Private item with access control
-  final note = await zs.data.create(
-    'notes',
-    {'title': 'Secret note'},
-    visibility: 'private',
-    allowed: ['user_123'],
-  );
-  print('Private note: ${note['_id']}');
+    // Update
+    await zs.data.update('messages', msg['_id'] as String, {
+      'text': 'Edited from Dart SDK!',
+    });
+    print('Updated!');
 
-  // Real-time
+    // Delete
+    await zs.data.delete('messages', msg['_id'] as String);
+    print('Deleted!');
+  } on ZeroStackException catch (e) {
+    print('Error: ${e.message} (${e.status})');
+  }
+
+  // Real-time subscriptions
   zs.realtime.subscribe('messages', (item, event) {
     print('[$event] ${item['data']}');
   });
 
-  // Config (owner only)
-  // await zs.config.setPublicNodes({'read': ['messages'], 'create': ['messages']});
-  // await zs.config.setNodeTTL({'sessions': 3600});
-
-  // Cleanup
+  // Don't forget to disconnect when done
   // zs.realtime.disconnect();
 }
