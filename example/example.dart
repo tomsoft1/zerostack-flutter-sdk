@@ -4,7 +4,7 @@ Future<void> main() async {
   final zs = ZeroStack(
     apiUrl: 'https://your-zerostack-server.com/api',
     wsUrl: 'https://your-zerostack-server.com',
-    apiKey: 'zs_your_api_key_here',
+    apiKey: 'zs_myapi_key'
   );
 
   // Option 1: Guest mode (no login required, node must be in publicNodes)

@@ -4,7 +4,7 @@ Future<void> main() async {
   final zs = ZeroStack(
     apiUrl: 'https://zerostack.myapp.fr/api',
     wsUrl: 'https://zerostack.myapp.fr',
-    apiKey: 'zs_1720f6260fd9449ebf15f75520cc994251ce8027b2aae7c099ee8976bdf6107d',
+    apiKey: 'zs_mt_api_key'
   );
 
   final email = 'testuser@example.com';
