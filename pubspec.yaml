@@ -1,0 +1,11 @@
+name: zerostack
+description: Flutter/Dart SDK for ZeroStack Backend-as-a-Service. Auth, CRUD, real-time, and configuration.
+version: 1.0.0
+homepage: https://github.com/tomsoft1/zerostack-flutter-sdk
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  http: ^1.2.0
+  socket_io_client: ^3.0.0
